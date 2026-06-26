@@ -16,15 +16,23 @@ import java.util.UUID;
 @Setter
 @Table(name = "users")
 public class User {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.UUID)
-//    private UUID userId;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
-    private String name;
+    @Column(unique = true)
+    private String userName;
+    @Column(nullable = false)
+    private String firstName;
+    @Column(nullable = false)
+    private String lastName;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+    @Column(unique = true)
     private String email;
     private LocalDate birthDate;
+    private String password;
+    @Column(length = 2048)
+    private String refreshToken;
     
     @Column(updatable = false,nullable = false)
     private LocalDateTime createdAt;

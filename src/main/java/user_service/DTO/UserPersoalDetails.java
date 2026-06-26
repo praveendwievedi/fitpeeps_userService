@@ -2,12 +2,13 @@ package user_service.DTO;
 
 import java.time.LocalDate;
 
-public record UserRequest(
+public record UserPersoalDetails(
         String userName,
         String firstName,
         String lastName,
-        String email,
-        String password,
+        Integer age,
         String gender,
+        String email,
         LocalDate birthDate
-) { }
+) {
+}

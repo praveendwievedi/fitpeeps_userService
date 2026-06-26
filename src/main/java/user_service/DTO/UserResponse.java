@@ -1,11 +1,11 @@
 package user_service.DTO;
 
-
-// i will use it for authentication details
-public record UserDetails(
+public record UserResponse(
+        Long userId,
         String userName,
         String firstName,
         String lastName,
         String email,
         String password
-) { }
+) {
+}

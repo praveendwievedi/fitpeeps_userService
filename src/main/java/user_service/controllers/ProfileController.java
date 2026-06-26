@@ -5,7 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import user_service.DTO.ProfileResponse;
+import user_service.DTO.UserDetailsRequest;
+import user_service.DTO.UserResponse;
 import user_service.DTO.UserRequest;
 import user_service.DTO.UserUpdateRequest;
 import user_service.models.User;
@@ -24,7 +25,7 @@ public class ProfileController {
     public ResponseEntity<?> createProfile(@RequestBody UserRequest request){
         System.out.println("hello");
         System.out.println(request);
-        ProfileResponse profile=profileServices.createUserProfile(request);
+        UserResponse profile=profileServices.createUserProfile(request);
         return new ResponseEntity<>(profile, HttpStatus.OK);
     }
 
@@ -32,19 +33,23 @@ public class ProfileController {
     public ResponseEntity<?> updateUser(@PathVariable Long userId,@RequestBody UserUpdateRequest request){
         if(profileServices.getUserDetailsById(userId).isEmpty())return new ResponseEntity<>("User Not Found",HttpStatus.OK);
 //        if(profileServices.checkForUser(userId).get().getId()!=req)
-        ProfileResponse user=profileServices.updateUserProfile(request,userId);
+        UserResponse user=profileServices.updateUserProfile(request,userId);
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserDetails(@PathVariable Long userId){
         Optional<User> user=profileServices.getUserDetailsById(userId);
-        ProfileResponse userResponse=new ProfileResponse(user.get().getName(), user.get().getEmail(), user.get().getUserId());
-
+        if(user.isEmpty())return new ResponseEntity<>("No Such User Found",HttpStatus.OK);
+        UserResponse userResponse=profileServices.convertToUserResponse(user.get());
         // here we will return the optional empty object if a user doesn't exist.
-        return user.isEmpty() ?
-                new ResponseEntity<>("No Such User Found",HttpStatus.OK) :
-                new ResponseEntity<>(userResponse,HttpStatus.OK);
+        return new ResponseEntity<>(userResponse,HttpStatus.OK);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> getUserByUserName(@RequestBody UserDetailsRequest request){
+        if(request.userName()==null)return new ResponseEntity<>( profileServices.findUserByUseName(request.email()),HttpStatus.OK);
+        else return new ResponseEntity<>( profileServices.findUserByUseName(request.userName()),HttpStatus.OK);
     }
 
 }
