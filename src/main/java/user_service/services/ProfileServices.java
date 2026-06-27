@@ -48,8 +48,8 @@ public class ProfileServices {
         user.setLastName(request.lastName() == null ? "" : request.lastName());
         user.setBirthDate(request.birthDate());
         user.setEmail(request.email());
-        user.setPassword(request.password());
-        user.setGender(request.gender()== null ? Gender.UNKNOWN : Gender.valueOf(request.gender()));
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setGender(request.gender()== null ? Gender.UNKNOWN : Gender.valueOf(request.gender().toUpperCase()));
         User savedUser=userRepo.save(user);
         return convertToUserResponse(savedUser);
     }
@@ -78,6 +78,6 @@ public class ProfileServices {
     }
 
     public Optional<UserDetails> findUserByUseName(String userName) {
-        return userRepo.findByUseName(userName).map(this::convetToUserDetails);
+        return userRepo.findByUserName(userName).map(this::convetToUserDetails);
     }
 }

@@ -23,8 +23,6 @@ public class ProfileController {
 
     @PostMapping("/register")
     public ResponseEntity<?> createProfile(@RequestBody UserRequest request){
-        System.out.println("hello");
-        System.out.println(request);
         UserResponse profile=profileServices.createUserProfile(request);
         return new ResponseEntity<>(profile, HttpStatus.OK);
     }
